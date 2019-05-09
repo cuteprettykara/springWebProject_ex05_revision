@@ -1,6 +1,8 @@
 package org.zerock.controller;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +16,7 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class UploadController {
 	
-	private static final String uploadFolder = "C:\\Temp";
+	private static final String UPLOAD_FOLDER = "C:\\Temp";
 
 	@GetMapping("/uploadForm")
 	public void uploadForm() {
@@ -30,7 +32,7 @@ public class UploadController {
 			log.info("size: " + multipartFile.getSize());
 			log.info("contentType: " + multipartFile.getContentType());
 			
-			File saveFile = new File(uploadFolder, multipartFile.getOriginalFilename());
+			File saveFile = new File(UPLOAD_FOLDER, multipartFile.getOriginalFilename());
 			
 			try {
 				multipartFile.transferTo(saveFile);
@@ -50,6 +52,14 @@ public class UploadController {
 	public void uploadAjaxPost(MultipartFile[] uploadFile) {
 		log.info("uploadAjax post...");
 		
+		// make yyyy/MM/dd folder
+		File uploadPath = new File(UPLOAD_FOLDER, getFolder());
+		log.info("uploadPath: " + uploadPath);
+		
+		if (!uploadPath.exists()) {
+			uploadPath.mkdirs();
+		}
+		
 		for (MultipartFile multipartFile : uploadFile) {
 			
 			String uploadFileName = multipartFile.getOriginalFilename();
@@ -62,7 +72,7 @@ public class UploadController {
 			log.info("size: " + multipartFile.getSize());
 			log.info("contentType: " + multipartFile.getContentType());
 			
-			File saveFile = new File(uploadFolder, uploadFileName);
+			File saveFile = new File(uploadPath, uploadFileName);
 			
 			try {
 				multipartFile.transferTo(saveFile);
@@ -72,5 +82,13 @@ public class UploadController {
 			 
 		}
 		
+	}
+
+	private String getFolder() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		String str = sdf.format(date);
+		
+		return str.replace("-", File.separator);
 	}
 }
