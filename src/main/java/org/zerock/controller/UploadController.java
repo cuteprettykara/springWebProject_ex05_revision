@@ -3,6 +3,7 @@ package org.zerock.controller;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,6 +72,10 @@ public class UploadController {
 			log.info("originalFileName: " + uploadFileName);
 			log.info("size: " + multipartFile.getSize());
 			log.info("contentType: " + multipartFile.getContentType());
+
+			// 파일 이름의 중복 방지
+			UUID uid = UUID.randomUUID();
+			uploadFileName = uid.toString() + "_" + uploadFileName;
 			
 			File saveFile = new File(uploadPath, uploadFileName);
 			
