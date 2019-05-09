@@ -60,10 +60,11 @@
 					type: "post",
 					url: "/uploadAjax",
 					data: formData,
+					dataType: "json",
 					processData: false,
 					contentType: false,
 					success: function(result) {
-						alert("Uploaded");
+						console.log(result);
 					}
 				});
 			});
