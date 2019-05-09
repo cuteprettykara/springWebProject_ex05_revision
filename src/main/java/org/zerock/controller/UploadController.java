@@ -40,4 +40,37 @@ public class UploadController {
 		}
 		
 	}
+	
+	@GetMapping("/uploadAjax")
+	public void uploadAjax() {
+		log.info("uploadAjax");
+	}
+	
+	@PostMapping("/uploadAjax")
+	public void uploadAjaxPost(MultipartFile[] uploadFile) {
+		log.info("uploadAjax post...");
+		
+		for (MultipartFile multipartFile : uploadFile) {
+			
+			String uploadFileName = multipartFile.getOriginalFilename();
+			
+			// IE의 경우에는 전체 파일 경로가 전송되므로, 마지막 '\'를 기준으로 잘라낸 문자열이 실제 파일 이름이 됩니다.
+			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
+			
+			log.info("-------------------------------------------");
+			log.info("originalFileName: " + uploadFileName);
+			log.info("size: " + multipartFile.getSize());
+			log.info("contentType: " + multipartFile.getContentType());
+			
+			File saveFile = new File(uploadFolder, uploadFileName);
+			
+			try {
+				multipartFile.transferTo(saveFile);
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
+			 
+		}
+		
+	}
 }
