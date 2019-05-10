@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.zerock.domain.AttachFileDTO;
@@ -171,7 +173,8 @@ public class UploadController {
 	
 	@GetMapping(value= "/downloadFile", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	@ResponseBody
-	public ResponseEntity<Resource> downloadFile(String fileName) {
+	public ResponseEntity<Resource> downloadFile(String fileName,
+			@RequestHeader("User-Agent") String userAgent) {
 		log.info("downloadFile: " + fileName);
 		
 		Resource resource = new FileSystemResource(UPLOAD_FOLDER + fileName);
@@ -179,11 +182,30 @@ public class UploadController {
 		log.info("resource: " + resource);
 		
 		String resourceName = resource.getFilename();
+		log.info("resourceName: " + resourceName);
 		
 		HttpHeaders headers = new HttpHeaders();
 		
+		
 		try {
-			headers.add("Content-Disposition", "attachment; filename=" + new String(resourceName.getBytes("UTF-8"), "ISO-8859-1"));
+			String downloadName = null;
+			
+			log.info("userAgent: " + userAgent);
+			
+			if (userAgent.contains("Trident")) {
+				log.info("IE Browser");
+				downloadName = URLEncoder.encode(resourceName, "UTF-8").replaceAll("\\+", " ");
+			} else if (userAgent.contains("Edge")) {
+				log.info("Edge Browser");
+				downloadName = URLEncoder.encode(resourceName, "UTF-8");
+			} else {
+				log.info("Chrome Browser");
+				downloadName = new String(resourceName.getBytes("UTF-8"), "ISO-8859-1");
+			}
+			
+			log.info("downloadName: " + downloadName);
+			headers.add("Content-Disposition", "attachment; filename=" + downloadName);
+			
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
