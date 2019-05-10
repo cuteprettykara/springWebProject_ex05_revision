@@ -62,6 +62,7 @@ public class UploadController {
 	}
 	
 	@PostMapping("/uploadAjax")
+	@ResponseBody
 	public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost(MultipartFile[] uploadFile) {
 		log.info("uploadAjax post...");
 		
