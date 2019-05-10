@@ -40,6 +40,8 @@
 		}
 		
   	$(document).ready(function() {
+  		
+  		var cloneObj = $(".uploadDiv").clone();
 			
   		$("#uploadBtn").on("click", function(e) {
 				var formData = new FormData();
@@ -65,6 +67,8 @@
 					contentType: false,
 					success: function(result) {
 						console.log(result);
+						
+						$(".uploadDiv").html(cloneObj);
 					}
 				});
 			});
