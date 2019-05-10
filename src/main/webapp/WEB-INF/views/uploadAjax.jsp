@@ -133,12 +133,16 @@
 						console.log("after replace: " + originPath);
 						
 						str += "<li><a href=\"javascript:showImage(\'" + originPath + "\')\">"
-						     + "<img src='/displayFile?fileName=" + imagePath + "'></a></li>";
+						     + "<img src='/displayFile?fileName=" + imagePath + "'></a>"
+						     + "<span data-file='" + imagePath + "' data-type='image'> x </span>"
+						     + "</li>";
 						
 					} else {
 						var filePath = encodeURIComponent(obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);
 						str += "<li><a href='downloadFile?fileName=" + filePath + "'>"
-							   + "<img src='/resources/img/attach.png'>" + obj.fileName + "</a></li>";
+							   + "<img src='/resources/img/attach.png'>" + obj.fileName + "</a>"
+							   + "<span data-file='" + filePath + "' data-type='file'> x </span>" 
+							   + "</li>";
 					}
 				});
 				
@@ -188,6 +192,24 @@
 				/* setTimeout(function() {
 					$(".bigPictureWrapper").hide();
 				}, 1000); */
+			});
+  		
+  		$(".uploadResult").on("click", "span", function(e) {
+  			var that = $(this);
+				var targetFile = $(this).data("file");
+				var type = $(this).data("type");
+				
+				$.ajax({
+					type: "post",
+					url: "/deleteFile",
+					data: {fileName: targetFile, type:type},
+					dataType: "text",
+					success: function(result) {
+						alert(result);
+						that.parent().remove();
+					}
+				});
+				
 			});
 			
 		});
