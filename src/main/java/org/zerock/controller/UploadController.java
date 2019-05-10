@@ -80,6 +80,7 @@ public class UploadController {
 			
 			// IE의 경우에는 전체 파일 경로가 전송되므로, 마지막 '\'를 기준으로 잘라낸 문자열이 실제 파일 이름이 됩니다.
 			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
+			attachDTO.setFileName(uploadFileName);
 			
 			log.info("-------------------------------------------");
 			log.info("originalFileName: " + uploadFileName);
@@ -92,7 +93,6 @@ public class UploadController {
 			
 			File saveFile = new File(uploadPath, uploadFileName);
 			
-			attachDTO.setFileName(uploadFileName);
 			attachDTO.setUploadPath(uploadFolderPath);
 			attachDTO.setUuid(uid.toString());
 
