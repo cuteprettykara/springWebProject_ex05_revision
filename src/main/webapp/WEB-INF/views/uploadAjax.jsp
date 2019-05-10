@@ -23,6 +23,11 @@
 		padding: 10px;
 	}
 	
+	.uploadResult ul li a {
+		text-decoration: none;
+		color: white;
+	}	
+	
 	.uploadResult ul li img {
 		width: 100px;
 	}
@@ -81,7 +86,9 @@
 						str += "<li><img src='/displayFile?fileName=" + imagePath + "'></li>";
 						
 					} else {
-						str += "<li><img src='/resources/img/attach.png'>" + obj.fileName + "</li>";
+						var filePath = encodeURIComponent(obj.uploadPath + "/" + obj.uuid + "_" + obj.fileName);
+						str += "<li><a href='downloadFile?fileName=" + filePath + "'>"
+							   + "<img src='/resources/img/attach.png'>" + obj.fileName + "</a></li>";
 					}
 				});
 				
