@@ -184,6 +184,10 @@ public class UploadController {
 		String resourceName = resource.getFilename();
 		log.info("resourceName: " + resourceName);
 		
+		// remove UUID
+		String resourceOriginalName = resourceName.substring(resourceName.indexOf("_") + 1);
+		log.info("resourceOriginalName: " + resourceOriginalName);
+		
 		HttpHeaders headers = new HttpHeaders();
 		
 		
@@ -194,13 +198,13 @@ public class UploadController {
 			
 			if (userAgent.contains("Trident")) {
 				log.info("IE Browser");
-				downloadName = URLEncoder.encode(resourceName, "UTF-8").replaceAll("\\+", " ");
+				downloadName = URLEncoder.encode(resourceOriginalName, "UTF-8").replaceAll("\\+", " ");
 			} else if (userAgent.contains("Edge")) {
 				log.info("Edge Browser");
-				downloadName = URLEncoder.encode(resourceName, "UTF-8");
+				downloadName = URLEncoder.encode(resourceOriginalName, "UTF-8");
 			} else {
 				log.info("Chrome Browser");
-				downloadName = new String(resourceName.getBytes("UTF-8"), "ISO-8859-1");
+				downloadName = new String(resourceOriginalName.getBytes("UTF-8"), "ISO-8859-1");
 			}
 			
 			log.info("downloadName: " + downloadName);
