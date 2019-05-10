@@ -10,10 +10,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +28,7 @@ import net.coobird.thumbnailator.Thumbnailator;
 @Log4j
 public class UploadController {
 	
-	private static final String UPLOAD_FOLDER = "C:\\Temp";
+	private static final String UPLOAD_FOLDER = "C:\\Temp\\";
 
 	@GetMapping("/uploadForm")
 	public void uploadForm() {
@@ -138,5 +140,26 @@ public class UploadController {
 		String str = sdf.format(date);
 		
 		return str.replace("-", File.separator);
+	}
+	
+	@GetMapping("/displayFile")
+	public ResponseEntity<byte[]> displayFile(String fileName) {
+		log.info("fileName :" + fileName);
+		
+		File file = new File(UPLOAD_FOLDER + fileName);
+		log.info("file :" + file);
+		
+		ResponseEntity<byte[]> result = null;
+		
+		try {
+			HttpHeaders headers = new HttpHeaders();
+			headers.add("Content-Type", Files.probeContentType(file.toPath()));
+			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), headers, HttpStatus.OK);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 }

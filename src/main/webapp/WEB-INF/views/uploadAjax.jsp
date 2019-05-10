@@ -24,7 +24,7 @@
 	}
 	
 	.uploadResult ul li img {
-		width: 20px;
+		width: 100px;
 	}
 </style>
 </head>
@@ -76,10 +76,12 @@
 				var str = "";
 				
 				$(uploadResultArr).each(function(i, obj) {
-					if (!obj.image) {
-						str += "<li><img src='/resources/img/attach.png'>" + obj.fileName + "</li>";
+					if (obj.image) {
+						var imagePath = encodeURIComponent(obj.uploadPath + "/s_" + obj.uuid + "_" + obj.fileName);
+						str += "<li><img src='/displayFile?fileName=" + imagePath + "'></li>";
+						
 					} else {
-						str += "<li>" + obj.fileName + "</li>";
+						str += "<li><img src='/resources/img/attach.png'>" + obj.fileName + "</li>";
 					}
 				});
 				
