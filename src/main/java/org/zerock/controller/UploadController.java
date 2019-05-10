@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.zerock.domain.AttachFileDTO;
 
@@ -143,6 +144,7 @@ public class UploadController {
 	}
 	
 	@GetMapping("/displayFile")
+	@ResponseBody
 	public ResponseEntity<byte[]> displayFile(String fileName) {
 		log.info("fileName :" + fileName);
 		
